@@ -1,6 +1,72 @@
 #install.packages('tidyverse')
 library(tidyverse)
 
+cars <- mtcars %>%
+  as.tibble() %>%
+  add_column(rownames(mtcars))
+colnames(cars)[12] <- 'model'
+
+cars
+###Using built in plotting functions
+hist(cars$disp,
+     breaks = 10,
+     xlim = c(min(cars$disp), max(cars$disp))
+     )
+
+barplot(cars$mpg)
+
+###GGPLOT2
+#histogram (one continous variable)
+ggplot(data = cars, aes(x = disp)) + 
+  geom_histogram(binwidth = 30)
+
+#scatterplot (two continous variables, reveals correlations)
+ggplot(data = cars, aes(x = disp, y = mpg)) +
+  geom_jitter()
+
+#barplot (one variable, discrete)
+ggplot(data = cars, aes(x = cyl)) +
+  geom_bar()
+
+
+
+a
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+########OLD#########
 ### Importing Data
 data.df <- read_csv('https://data.ca.gov/dataset/1b31c08e-b1a7-4459-8aef-41cfff61fc5e/resource/5c42e9f6-e172-4db4-9a51-ca1256b03a26/download/fleet-asset-management-system-open-data-2015-2019.csv')
 summary(data.df)
@@ -13,14 +79,14 @@ data.df[data.df == 'Null'] <- NA
 
 ### Dealing with numbers stored as characters
 columnsToConvert <- c(
-    "Model_Year",
-    "Payload_Rating",
-    "Shipping_Weight",
-    "Purchase_Price",
-    "Disposition_Mileage",
-    "Disposition_Sold_Amount",
-    "Total_Miles"
-  )
+  "Model_Year",
+  "Payload_Rating",
+  "Shipping_Weight",
+  "Purchase_Price",
+  "Disposition_Mileage",
+  "Disposition_Sold_Amount",
+  "Total_Miles"
+)
 
 for (colName in columnsToConvert) {
   data.df[colName] <- parse_number(data.df[[colName]])
@@ -34,19 +100,5 @@ negative_miles <- data.df %>% #why do these vehicles have negative miles?
 #lets get rid of the vehciles with negative miles
 data.df <- anti_join(data.df, negative_miles, by='Total_Miles') #anti-join is more SQL based
 
-
-#using built in plotting functions
-modelYears <- data.df %>% filter(!is.na(Model_Year), Model_Year > 1000)
-
-hist(modelYears$Model_Year,
-     breaks = 100,
-     xlim = c(min(modelYears$Model_Year), max(modelYears$Model_Year))
-     )
-
-barplot(data.df$Make_Model)
-
-
-
-
-
-
+#drop anything made before 1900
+data.df <- data.df %>% filter(!is.na(Model_Year), Model_Year > 1000)
