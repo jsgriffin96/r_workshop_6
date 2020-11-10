@@ -17,20 +17,20 @@ barplot(cars$mpg)
 
 ###GGPLOT2 basic plots
 #histogram (one continous variable)
-ggplot(data = cars, aes(x = disp)) + 
-  geom_histogram(binwidth = 30)
+ggplot(data = cars) + 
+  geom_histogram(aes(x = disp), binwidth = 30)
 
 #scatterplot (two continous variables, reveals correlations)
-ggplot(data = cars, aes(x = disp, y = mpg)) +
-  geom_jitter()
+ggplot(data = cars) +
+  geom_jitter(aes(x = disp, y = mpg))
 
 #barplot (one variable, discrete)
-ggplot(data = cars, aes(x = cyl)) +
-  geom_bar()
+ggplot(data = cars) +
+  geom_bar(aes(x = cyl))
 
 #boxplot (summary of continuous variable, grouped)
-ggplot(data = cars, aes(x = cyl, y = mpg, group=cyl)) +
-  geom_boxplot()
+ggplot(data = cars) +
+  geom_boxplot(aes(x = cyl, y = mpg, group=cyl))
 
 #
 
