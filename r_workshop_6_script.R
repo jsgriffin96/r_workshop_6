@@ -15,7 +15,7 @@ hist(cars$disp,
 
 barplot(cars$mpg)
 
-###GGPLOT2
+###GGPLOT2 basic plots
 #histogram (one continous variable)
 ggplot(data = cars, aes(x = disp)) + 
   geom_histogram(binwidth = 30)
@@ -27,6 +27,12 @@ ggplot(data = cars, aes(x = disp, y = mpg)) +
 #barplot (one variable, discrete)
 ggplot(data = cars, aes(x = cyl)) +
   geom_bar()
+
+#boxplot (summary of continuous variable, grouped)
+ggplot(data = cars, aes(x = cyl, y = mpg, group=cyl)) +
+  geom_boxplot()
+
+#
 
 
 
