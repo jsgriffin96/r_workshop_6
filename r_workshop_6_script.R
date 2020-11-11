@@ -1,5 +1,12 @@
 #install.packages('tidyverse')
+#install.packages('ggrepel')
+#install.packages('ggthemes')
+#install.packages('plotly')
 library(tidyverse)
+library(ggrepel)
+library(ggthemes)
+library(scales)
+library(plotly)
 
 cars <- mtcars %>%
   as.tibble() %>%
@@ -17,26 +24,74 @@ barplot(cars$mpg)
 
 ###GGPLOT2 basic plots
 #histogram (one continous variable)
-ggplot(data = cars) + 
-  geom_histogram(aes(x = disp), binwidth = 30)
+ggplot(data = cars, aes(x = disp)) +  #data
+  geom_histogram(binwidth = 30)       #geom
 
 #scatterplot (two continous variables, reveals correlations)
-ggplot(data = cars) +
-  geom_jitter(aes(x = disp, y = mpg))
+ggplot(data = cars, aes(x = disp, y = mpg)) + #data
+  geom_jitter() + #geom
+  coord_flip() #coordinate system
 
-#barplot (one variable, discrete)
-ggplot(data = cars) +
-  geom_bar(aes(x = cyl))
+#barplot (one variable, discrete/ categorical)
+ggplot(data = cars, aes(x = cyl)) +
+  geom_bar() +
+  coord_cartesian(xlim = c(0, 10))
 
 #boxplot (summary of continuous variable, grouped)
-ggplot(data = cars) +
-  geom_boxplot(aes(x = cyl, y = mpg, group=cyl))
+ggplot(data = cars, aes(x = cyl, y = mpg, group=cyl)) +
+  geom_boxplot()
 
-#
+#chaining plots
+ggplot(data = cars, aes(x = disp, y = mpg)) +
+  geom_jitter() +
+  geom_smooth(method=loess)
+
+##asthetics
+#points
+ggplot(data = cars, aes(x = hp, y = qsec)) +
+  geom_jitter(shape = 2, colour = 'green')  #https://rkabacoff.github.io/datavis/datavis_files/figure-html/shapes1-1.png
+
+#title
+ggplot(data = cars, aes(x = hp, y = qsec)) +
+  geom_jitter() +
+  ggtitle("Horsepower \nvs \nQuarter Second Time")
+
+#axes
+ggplot(data = cars, aes(x = hp, y = qsec)) +
+  geom_jitter() +
+  scale_x_continuous(name = "Horse Power",
+                     breaks = seq(0, 350, 50),
+                     limits = c(0, 350)) +
+  scale_y_continuous(name = "1/4 Mile Time",
+                     breaks = seq(10, 25, 1),
+                     limits = c(10, 25)) #,label=percent
+
+#themes
+ggplot(data = cars, aes(x = hp, y = qsec)) +
+  geom_jitter() +
+  theme_economist()
+
+#labeling points
+cars %>%
+  filter(mpg > 20) %>%
+  mutate(PtW = hp/wt) %>%
+  ggplot(aes(x=hp, y=qsec )) + 
+  geom_point() +
+  geom_label(aes(label=model))
+  #geom_label_repel(aes(label=model))
+  
+
+#interactive plots
+plot <- ggplot(data = cars, aes(x = hp, y = qsec)) +
+  geom_jitter()
+
+ggplotly(plot)
+
+#saving plots
+ggsave(plot, filename = "mygraph.png")
 
 
 
-a
 
 
 
