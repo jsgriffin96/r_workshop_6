@@ -2,11 +2,17 @@
 #install.packages('ggrepel')
 #install.packages('ggthemes')
 #install.packages('plotly')
+#install.packages('lattice')
+#install.packages('hrbrthemes')
+#install.packages('GGally')
+
 library(tidyverse)
 library(ggrepel)
 library(ggthemes)
 library(scales)
 library(plotly)
+library(lattice)
+library(GGally)
 
 cars <- mtcars %>%
   as.tibble() %>%
@@ -15,14 +21,84 @@ colnames(cars)[12] <- 'model'
 
 cars
 ###Using built in plotting functions
-hist(cars$disp,
-     breaks = 10,
-     xlim = c(min(cars$disp), max(cars$disp))
-     )
+hist(cars$disp, breaks = 10)
 
-barplot(cars$mpg)
+maxTemps <- c(75, 80, 83)
+days <- c('Mon','Tues','Wed')
+barplot(maxTemps, names.arg = days)
+
+###Lattice package
+xyplot(mpg ~ wt, cars) #xyplot(y~x,data)
+histogram(cars$disp, breaks = 10)
+
 
 ###GGPLOT2 basic plots
+ggplot(data = cars, aes(x = mpg, y = disp)) + #data
+  geom_jitter(size=3, color='red') + #geom
+  facet_grid(cols = vars(cyl)) + #coordinate
+  coord_flip() + #coordinate
+  theme_economist() + #coordinate
+  labs(title = 'MPG vs Displacement', x = 'Miles Per Gallon', y = 'Displacement') #coordinate
+
+
+###One continous variable
+hist(cars$mpg)
+
+ggplot(data = cars, aes(x = mpg)) +
+  geom_histogram(binwidth = 5) +
+  scale_x_continuous(name = "Miles Per Gallon",
+                     breaks = seq(0, 35, 5),
+                     limits = c(5, 35)) +
+  scale_y_continuous(name = "Count")
+
+###Categorical
+barplot(table(cars$cyl))
+
+ggplot(data = cars, aes(x = cyl)) +
+  geom_bar()
+
+###Two Variables
+#x=continous, y=continous
+cars %>% 
+  select(disp, hp, mpg) %>%
+  filter(mpg > 15) %>%
+  ggplot(aes(x = disp, y = hp)) + 
+  geom_point() +
+  geom_smooth()
+
+
+#x=categorical, y=continous
+boxplot(data = cars, mpg~cyl)
+
+ggplot(data=cars, aes(x=cyl, y=mpg))+
+  geom_bar(stat = 'identity')
+
+ggplot(data=cars, aes(x=cyl, y=mpg, group=cyl))+
+  geom_boxplot()
+
+#exploring data with visualization
+#library(GGally)
+ggpairs(cars %>% select(cyl, mpg, disp, wt, qsec))
+ggcorr(cars %>% select(!model))
+
+#interactive plots
+#library(plotly)
+plot <- ggplot(data = cars, aes(x = hp, y = qsec)) +
+  geom_jitter()
+
+ggplotly(plot)
+
+#labeling
+#library(ggrepel)
+plot + geom_label(aes(label=model))
+plot + geom_label_repel(aes(label = model))
+
+#saving plots
+ggsave(plot, filename = "mygraph.png")
+
+
+
+####OLD#####
 #histogram (one continous variable)
 ggplot(data = cars, aes(x = disp)) +  #data
   geom_histogram(binwidth = 30)       #geom
