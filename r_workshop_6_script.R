@@ -45,17 +45,23 @@ barplot(table(cars$cyl))
 ggplot(data = cars, aes(x = cyl)) +
   geom_bar()
 
+### Cutting Categorical Var by Categorical Var
+ggplot(data = cars, aes(x = cyl, fill = factor(am))) +
+  geom_bar()
+
 ###Two Variables
 #x=continous, y=continous (done above)
 
 #x=categorical, y=continous 
-boxplot(data = cars, mpg~cyl) #move to appendix
-
 ggplot(data=cars, aes(x=cyl, y=mpg))+
-  geom_bar(stat = 'identity')
+  geom_bar(stat = 'identity') #+ see line 62
 
 ggplot(data=cars, aes(x=cyl, y=mpg, group=cyl))+
   geom_boxplot()
+
+#x=Categorical, y=continuous, moderator = categorical
+ggplot(data = cars, aes(x = cyl, y = mpg)) +
+  geom_bar(stat = 'identity', aes(fill = factor(vs))) #vs:Engine(0 = V-shaped, 1 = straight)
 
 #exploring data with visualization
 #library(GGally)
@@ -88,3 +94,5 @@ ggplot(data = cars, aes(x = mpg)) +
                      limits = c(5, 35)) +
   scale_y_continuous(name = "Count")
 
+#built-in boxplot
+boxplot(data = cars, mpg~cyl) 
